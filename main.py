@@ -1,7 +1,7 @@
 import random
 from time import sleep
 print("Welcome to Home Away From Home! A Text-Based RPG game teaching students about agricultural practices from around the world!")
-print("There are four worlds you can choose from, each with its own gameplay \nNunjin modeled after South Korea's Jeju Island \nLandry \nSotori modeled after Japan \nNyongo\n Please note the only worlds that are completed are Nunjin and Sotori. The other's will be completed at a later time")
+print("There are four worlds you can choose from, each with its own gameplay \nNunjin \nLandry \nSotori \nNyongo \n Please note the only worlds that are completed are Nunjin and Sotori. The others will be completed at a later time")
 
 game_worlds = ["Nunjin", "Landry", "Sotori", "Nyongo"]
 current_game_world = ""
@@ -15,24 +15,30 @@ def choose_world(user_world):
 
 user_world = input("Please select your world (Nunjin, Landry, Sotori, Nyongo). Please put capital letters: ").capitalize()
 choose_world(user_world)
-print(f"Nice! Let's get started in {current_game_world}")
+print(f"\nNice! Let's get started in {current_game_world}")
 user_name = input("Please type in your name: ").capitalize()
 
 inventory = {
-    "Garlic Seeds" : 1 # the key is the item and the value is the quantity!
+    "Garlic seeds" : 1 # the key is the item and the value is the quantity!
 }
 
 my_market = {}
 
 seed_to_plant = {
-    "Garlic Seeds" : "Garlic",
-    "Onion Seeds": "Onion",
-    "Stawberry Seeds": "Strawberry",
-    "Pear Seeds": "Pears",
-    "Carrot Seeds": "Carrots",
-    "Tangerine Seeds": "Tangerines",
-    "Rice Seeds" : "1 LB of Rice",
-    "Persimmon Seeds" : "Persimmons",
+    "Garlic seeds" : "Garlic cloves",
+    "Onion seeds": "Onion bulbs",
+    "Strawberry seeds": "Strawberries",
+    "Pear seeds": "Pears",
+    "Carrot seeds": "Carrots",
+    "Tangerine seeds": "Tangerines",
+    "Rice seeds" : "1 LB of Rice",
+    "Persimmon seeds" : "Persimmons",
+    "Sugar beet seeds": "Sugar Beets",
+    "Daikon seeds": "Daikons",
+    "Cabbage seeds": "Cabbage",
+    "Taro seeds": "Taro roots",
+    "Cherry seeds": "Cherries",
+    "Pumpkin seeds": "Pumpkins",
     #maps the seeds to the plant
 }
 coins = 50
@@ -42,11 +48,11 @@ level = 0
 game_run = True
 
 nunjin_sea = {
-    "turban shells": 20, # Each Key is the sea creature and the value is how much it is worth!
-    "sea cucumbers": 40, 
-    "mackerel": 10, 
-    "abalone": 5, 
-    "hairtail fish": 20, 
+    "Turban shells": 20, # Each Key is the sea creature and the value is how much it is worth!
+    "Sea cucumbers": 40, 
+    "Mackerel": 10, 
+    "Abalone": 5, 
+    "Hairtail fish": 20, 
     "Sea Urchin": 13, 
     "Cuttlefish":17, 
     "Octopus": 11, 
@@ -55,35 +61,37 @@ nunjin_sea = {
     }
 
 nunjin_market = {
-    "fishing rod":10, #Each Key is the item and the Value is the price!
+    "Fishing rod":10, #Each Key is the item and the Value is the price!
     "Golden fishing rod - increases your chances of catching fish": 25,
-    "Carrot Seeds": 3,
-    "Tangerine Seeds": 5,
-    "Rice Seeds" : 3,
-    "Pear Seeds" : 2,
-    "Persimmon Seeds" : 7,
-    "Strawberry Seeds": 12,
-    "Garlic Seeds": 15,
-    "Onion Seeds": 10,
+    "Carrot seeds": 3,
+    "Tangerine seeds": 5,
+    "Rice seeds" : 3,
+    "Pear seeds" : 2,
+    "Persimmon seeds" : 7,
+    "Strawberry seeds": 12,
+    "Garlic seeds": 15,
+    "Onion seeds": 10,
     "Super Growth Ginseng - helps speed up the growing process": 45,
     "Special Fish Bait": 75,
 }
 
 sotori_market = {
-    "fishing rod": 9,
-    "Sugar Beet Seeds":10,
-    "Daikon Seeds": 7,
-    "Cabbage Seeds": 6,
-    "Taro Seeds": 5,
-    "Carrot Seeds": 10,
-    "Cherry Seeds": 13,
-    "Pumpkin Seeds": 17,
-    "Onion Seeds": 8,
+    "Fishing rod": 9,
+    "Sugar Beet seeds":10,
+    "Daikon seeds": 7,
+    "Cabbage seeds": 6,
+    "Taro seeds": 5,
+    "Carrot seeds": 10,
+    "Cherry seeds": 13,
+    "Pumpkin seeds": 17,
+    "Onion seeds": 8,
+    "Promotional flyer" : 75
 }
 def fishing():
     global coins, XP, days, level, nunjin_sea, inventory
     print(f"Coins {coins}                 | XP {XP}                 | Day {days}                 | Level {level}                 | ")
     print()
+    print("To the Coastal City of Nunjin, Fishing & Diving is a very important part of the culture. Simarlry, Diving has a huge history in the province of Jeju Island in South Korea (of which Nunjin is inspired by!)")
     print("Let's get fishing!")
     print("Searching for fishing rod...")
     sleep(0.75)
@@ -93,40 +101,43 @@ def fishing():
         for item in inventory:
             if "fishing rod" not in inventory:
                 print("Uh oh! Looks like you need to go buy a fishing rod!")
+                break
             elif "fishing rod" in inventory:
-                if random.randint(0, 101) < 25:
+                if random.randint(0, 100) < 25:
                     caught_fish = random.choice(nunjin_sea)
                     print("Waiting....")
                     sleep(1)
                     print("Still waiting....")
                     print(0.75)
                     print(f"Hooray, you caught {caught_fish}! {caught_fish} is worth {nunjin_sea[caught_fish]}")
-                elif random.randint(0,101) > 25:
+                    inventory[caught_fish] = 1
+                elif random.randint(0,100) > 25:
                     print("Sorry bad catch day. Better luck next time!")
+                break
 
 def farming():
     global days, level, inventory, seed_to_plant, my_market
     print("Let's start farming!")
     print()
     print(f"Here is your inventory:\n {inventory}")
-    planted_seed = input("What would you like to plant? ")
+    planted_seed = input("What would you like to plant? ").capitalize()
     plant_count = int(input(f"How many of your {planted_seed} would you like to plant? "))
-    print(f"Searching in the storage for the {plant_count} seeds....")
+    print(f"Searching in the storage for the {plant_count} seeds....\n\n")
     sleep(1)
     plant_time = random.randint(0, 10)
     print(f"Found it! The expected plant time is {plant_time} days! You know how it is in Nunjin..very unpredictable! Please wait patiently!")
     sleep(plant_time)
     days += plant_time
-    if random.randint(0,51) > 25:
+    if random.randint(0,50) > 25:
         print(f"Hooray! The {planted_seed} have grown perfectly!")
         plant = seed_to_plant[planted_seed]
         inventory[plant] = plant_count
         inventory.pop(planted_seed)
-        print(f"{plant_count} {plant} was added to your inventory. Time to sell and make some money!!")
-    elif random.randint(0,51) < 25:
+        print(f"{plant_count} {plant} was added to your inventory. Time to sell and make some money!! \n")
+    else:
         print("Oh no...the plant did not survive.")
-        inventory.pop(planted_seed)
-        print("Better luck next time!")
+        inventory[planted_seed] -= plant_count
+        print("Better luck next time!\n")
     return days
 
 def buy(world_market):
@@ -136,29 +147,46 @@ def buy(world_market):
     print(f"Coins {coins}                 | XP {XP}                 | Day {days}                 | Level {level}                 | ")
     print()
     print("Welcome to the market! Your one-stop shop to buy anything!")
-    print("Here you can buy farming tools, which you will need to farm and fishing tools which you would need to fish.")
+    print("Here you can buy any tools you need as well as special upgrades.")
     market_enter = input("Would you like to purchase items in the market? (Y/N)")
-    if market_enter == "Y":
-        print("Loading the market for you now!")
-        sleep(0.75)
-        print(world_market)
-        while market_enter == "Y":
-            purchase = input("What would you like to buy? (Type exit, to leave market")
-            if purchase == "exit" or "Exit":
-                market_enter = "N"
-            else:
-                pass
+    print("Loading the market for you now!")
+    sleep(0.75)
+    get_market(world_market)
+    while market_enter == "Y":
+        purchase = input("What would you like to buy? (Type 'exit' to leave market or 'show' to see market) ").capitalize()
+        if purchase == "exit" or purchase == "Exit":
+            market_enter = "N"
+        elif purchase == "show" or purchase == "Show":
+            print("Loading market")
+            get_market(world_market)
+        else:
+            item_quantity = int(input("How many would you like to buy? "))
             print("Checking stock....")
             sleep(0.75)
-            item_quantity = int(input("How many would you like to buy? "))
-            if coins >= world_market[purchase]:
+            def checking_stock(item, amount, market):
+                global nunjin_market, sotori_market, market_enter
+                for x in market:
+                    if item in market:
+                        amount *= market[item]
+                        break
+                    elif item not in market:
+                        print(f"{item} cannot be found in the market. Leaving Market now out of embarrassment...")
+                        market_enter = "N"
+                        break
+                        
+                return amount
+            total_amount = checking_stock(purchase, item_quantity, world_market)
+            def reciept(price, purchase, quantity):
+                print(f"Here is your reciept {user_name}!")
+                print(f"You are purchasing {quantity} {purchase} for {price} coins!")
+            reciept(total_amount, purchase, item_quantity)
+            if coins >= total_amount:
                 print("Checking your balance....")
                 print()
                 sleep(0.75)
-                print("Iniating money transfer...")
-                print()
-                print("Money Transfer Success! ")
-                coins = coins - world_market[purchase]
+                print("Iniating money transfer... \n")
+                print("Money Transfer Success! \n")
+                coins = coins - total_amount
                 print(f"Your balance is now {coins}")
                 if len(inventory) > 0:
                     for item in inventory:
@@ -170,59 +198,106 @@ def buy(world_market):
                             break
                 elif len(inventory) == 0:
                     inventory[purchase] = item_quantity
-            elif coins < world_market[purchase]:
+            elif coins < total_amount:
                 print("Sorry you don't have enough money to make this purchase.")
     return coins
 
-def selling():
+def sell(world):
     global inventory, my_market, coins
-    print("Entering Nunjin's Busiest Farmer's Market. Here you can find the best of the best items! Do you have what it takes to sell? Let's find out!")
-    print(f"This is your market: {my_market}")
+    print(f"Entering {world}'s Busiest Farmer's Market. Here you can find the best of the best items! Do you have what it takes to sell? Let's find out!")
+    print(f"This is your market: {my_market}\n")
     print("To add items to your market, you must move it from your inventory first!")
     print(f"Here is your inventory:\n {inventory}")
-    new_market_item = input("What would you like to add to your market? ")
-    market_item_price = int(input("How much would you like to sell it for? (The market is unpredictable..it may not go for what you want!)"))
-    item_count = int(input("How many would you like to sell? (Note you may sell all or none) "))
-    print("Setting up market now!")
-    inventory[new_market_item] -= item_count
-    my_market[new_market_item] = item_count
-    sleep(2)
-    print("Your market is now ready to sell!")
-    print(f"You are selling {item_count} {new_market_item} for {market_item_price} coins!")
-    if random.randint(0, 51) > 25:
-        print("Oh look! A customer has come to purchase..")
-        sell_price = random.randint(1, market_item_price+10)
-        sell_count = random.randint(0,item_count+1)
-        sleep(1.75)
-        print(f"After negotiating, you have sold {sell_count} {new_market_item} for {sell_price}!!!!")
-        coins += sell_price
-        my_market[new_market_item] -= sell_count
+    new_market_item = input("What would you like to add to your market? (if nothing, type none!) ").capitalize()
+    if new_market_item == "none":
+        market_item = input("Please enter an item from your market that you would like to try selling!").capitalize()
     else:
-        pass
+        market_item_price = int(input("How much coins would you like to sell it for? (You can set it to virtually any price!) "))
+        item_count = int(input("How many would you like to sell? (Note: You may only sell up to the amount in your inventory!) "))
+        print("Setting up market now!")
+        inventory[new_market_item] -= item_count
+        my_market[new_market_item] = item_count
+        sleep(2)
+        print("Your market is now ready to sell!")
+        print(f"You are selling {item_count} {new_market_item} for {market_item_price} coins!")
+        sell_confirm = input("Confirm your listing (Y/N)! ")
+        if sell_confirm == "Y" or sell_confirm == "y":
+            if random.randint(0, 50) > 25:
+                print("Oh look! A customer has come to purchase..")
+                sell_price = random.randint(1, market_item_price+10)
+                sell_count = random.randint(0,item_count+1)
+                sleep(1.75)
+                print(f"After negotiating, you have sold {sell_count} {new_market_item} for {sell_price}!!!!")
+                coins += sell_price
+                my_market[new_market_item] -= sell_count
+            else:
+                pass
+        else:
+            print("Exiting sale")
 
-def reset_stats(first, second, third):
+def reset_stats(first, second):
+    global coins, XP, days, level, inventory, my_market
     coins = second
     XP = first
-    health = third
     days = first
     level = first
+    inventory.clear()
+    inventory.update({"Taro seeds": 1})
+    my_market.clear()
+
 
 def user_guide(world):
     pass
-
-
+def clean_inventory_market():
+    global inventory, my_market
+    for keys in inventory:
+        if inventory.get(keys) == 0:
+            inventory.pop(keys)
+        else:
+            continue
+    for keys in my_market:
+        if my_market.get(keys) == 0:
+            my_market.pop(keys)
+def get_inv(dict):
+    print("Item: Quantity")
+    for key,value in dict.items():
+        print(f"Item:{key}\nQuantity:{value}")
+def get_market(dict):
+    print("Item: Price")
+    for key, value in dict.items():
+        print(f"Item:{key}\nPrice:{value} Coins")
+def restaurant():
+    print(f"Welcome to your very own restaurant called {user_name}'s restaurant! Your restaurant specializes in traditional Japanese Cuisine!")
+    recipes = {
+        "takoyaki": ['fish', "ice cream"]
+    }
+def level_up(current_XP):
+    global level
+    levels = [0, 10, 20, 30, 45, 50, 65, 85, 90, 95, 100, 130, 150, 175, 180, 195, 200]
+    for level_XP in levels:
+        if current_XP >= level_XP:
+            level = levels.index(level_XP)
+            continue
+        else:
+            continue
+    if level == 10:
+        print("Wow you have done so well! Here is 100 coins for 100 XP!")
+        coins +=100
 if current_game_world == "Nunjin":
-    print(f"Welcome to Nunjin! Nunjin is a coastal city that survives upon the sea! and {user_name} has just moved in!")
+    reset_stats(0,50)
+    print(f"Welcome to Nunjin! Nunjin is a 'fictional' coastal city that survives upon the sea! and {user_name} has just moved in!")
     print("The commands you have avalible to you in Nunjin are the following: \n Fish \n Farm \n Buy \n Inv/Inventory \n Sell \n Help")
     print()
     sleep(0.5)
     print(f"You are starting off with {coins} coins, {XP} XP at the {days} days mark! As you buy and sell the items you harvest, you gain XP which helps you to level up!")
     while game_run == True:
         sleep(1.75)
-        print("Game Loading....")
         print("\n \n")
         print(f"Coins {coins}                 | XP {XP}                 | Day {days}                 | Level {level}                 | ")
         user_command = input("Please enter a command to get started: ").capitalize()
+        XP += random.randrange(0, 26, 5)
+        level_up(XP)
+        clean_inventory_market()
         if user_command == "Fish":
             print()
             fishing()
@@ -235,16 +310,20 @@ if current_game_world == "Nunjin":
             buy(nunjin_market)
         elif user_command == "Inv" or user_command == "Inventory":
             print()
-            print(inventory)
+            get_inv(inventory)
             print("Within your market is the following: ")
             print(my_market)
             print()
         elif user_command == "Sell":
-            selling()
+            sell("Nunjin")
         elif user_command == "Help":
             user_guide("Nunjin")
+        elif coins < 0:
+            print("Uh oh....Funds just too low...")
+            print("We cannot survive on this income.. We must go home..You lose")
+            game_run = False
 elif current_game_world == "Sotori":
-    reset_stats(0, 50, 100)
+    reset_stats(0, 50)
     print(f"Welcome to Sotori! Sotori is a fictional mountainous city modeled after Japan and it's terrance farming!")
     print("The commands you have avalible to you in Sotori are the following: \n Restaurant \n Farm \n Buy \n See Inventory or See Inv \n Sell \n Help")
     print()
@@ -252,19 +331,25 @@ elif current_game_world == "Sotori":
     print(f"You are starting off with {coins} coins, {XP} XP at the {days} days mark! As you buy and sell the items you harvest, you gain XP which helps you to level up!")
     while game_run == True:
         user_command = input("Please enter a command to get started: ").capitalize()
+        XP += random.randrange(0, 26, 5)
         if user_command == "Restaurant":
-            pass
+            restaurant()
         elif user_command == "Sell":
-            pass
+            sell("Sotori")
         elif user_command == "Farm":
-            pass
+            farming()
         elif user_command == "Buy":
             buy(sotori_market)
         elif user_command == "Inventory" or user_command == "Inv":
-            pass
+            get_inv(inventory)
+            print(my_market)
         elif user_command == "Help":
             pass
         elif user_command == "Exit":
+            game_run = False
+        elif coins < 0:
+            print("Uh oh....Funds just too low...")
+            print("We cannot survive on this income.. We must go home..You lose")
             game_run = False
 else:
     print("These worlds have not been made yet!\nFor the sake of this project, I have sticked to only two worlds, but I hope I can turn this into an actual game probably using pycharm, and finish the rest of the worlds!")
