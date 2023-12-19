@@ -301,11 +301,11 @@ def clean_inventory_market():
 def get_inv(dict):
     print("Item: Quantity")
     for key,value in dict.items():
-        print(f"Item:{key}\nQuantity:{value}")
+        print(f"Item:{key}\nQuantity:{value}\n")
 def get_market(dict):
     print("Item: Price")
     for key, value in dict.items():
-        print(f"Item:{key}\nPrice:{value} Coins")
+        print(f"Item:{key}\nPrice:{value} Coins\n")
 def restaurant():
     print(f"Welcome to your very own restaurant called {user_name}'s restaurant! Your restaurant specializes in traditional Japanese Cuisine!")
     recipes = {
