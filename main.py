@@ -117,27 +117,45 @@ def fishing():
 
 def farming():
     global days, level, inventory, seed_to_plant, my_market
-    print("Let's start farming!")
+    print("Welcome to the farm!")
     print()
     print(f"Here is your inventory:\n {inventory}")
-    planted_seed = input("What would you like to plant? ").capitalize()
-    plant_count = int(input(f"How many of your {planted_seed} would you like to plant? "))
-    print(f"Searching in the storage for the {plant_count} seeds....\n\n")
-    sleep(1)
-    plant_time = random.randint(0, 10)
-    print(f"Found it! The expected plant time is {plant_time} days! You know how it is in Nunjin..very unpredictable! Please wait patiently!")
-    sleep(plant_time)
-    days += plant_time
-    if random.randint(0,50) > 25:
-        print(f"Hooray! The {planted_seed} have grown perfectly!")
-        plant = seed_to_plant[planted_seed]
-        inventory[plant] = plant_count
-        inventory.pop(planted_seed)
-        print(f"{plant_count} {plant} was added to your inventory. Time to sell and make some money!! \n")
+    farm_enter = input("Would you like to enter your farm? (Y/N) ")
+    if farm_enter == "Y" or "y":
+        while farm_enter == "Y" or "y":
+            planted_seed = input("What would you like to plant? ").capitalize()
+            if planted_seed == "Exit" or "exit":
+                pass
+            elif planted_seed == "show":
+                get_inv(inventory)
+            else:
+                for x in inventory:
+                    if planted_seed not in inventory:
+                        print(f"{planted_seed} cannot be found!")
+                        break
+                    elif planted_seed in inventory:
+                        plant_count = int(input(f"How many of your {planted_seed} would you like to plant? "))
+                        print(f"Searching in the storage for the {plant_count} seeds....\n\n")
+                        sleep(1)
+                        plant_time = random.randint(0, 10)
+                        print(f"Found it! The expected plant time is {plant_time} days! You know how it is in Nunjin..very unpredictable! Please wait patiently!")
+                        sleep(plant_time)
+                        days += plant_time
+                        if random.randint(0,50) > 25:
+                            print(f"Hooray! The {planted_seed} have grown perfectly!")
+                            plant = seed_to_plant[planted_seed]
+                            inventory[plant] = plant_count
+                            inventory.pop(planted_seed)
+                            print(f"{plant_count} {plant} was added to your inventory. Time to sell and make some money!! \n")
+                        else:
+                            print("Oh no...the plant did not survive.")
+                            inventory[planted_seed] -= plant_count
+                            print("Better luck next time!\n")
+                        break
+    elif farm_enter == "N" or "n":
+        pass
     else:
-        print("Oh no...the plant did not survive.")
-        inventory[planted_seed] -= plant_count
-        print("Better luck next time!\n")
+        print("This is not a valid answer \n")
     return days
 
 def buy(world_market):
@@ -211,6 +229,25 @@ def sell(world):
     new_market_item = input("What would you like to add to your market? (if nothing, type none!) ").capitalize()
     if new_market_item == "none":
         market_item = input("Please enter an item from your market that you would like to try selling!").capitalize()
+        item_count = int(input("How many would you like to sell? (Note: You may only sell up to the amount in your inventory!) "))
+        print("Setting up market now!")
+        inventory[market_item] -= item_count
+        my_market[market_item] = item_count
+        sleep(2)
+        print("Your market is now ready to sell!")
+        print(f"You are selling {item_count} {market_item} for {market_item_price} coins!")
+        sell_confirm = input("Confirm your listing (Y/N)! ")
+        if sell_confirm == "Y" or sell_confirm == "y":
+            if random.randint(0, 50) > 25:
+                print("Oh look! A customer has come to purchase..")
+                sell_price = random.randint(1, market_item_price+10)
+                sell_count = random.randint(0,item_count+1)
+                sleep(1.75)
+                print(f"After negotiating, you have sold {sell_count} {new_market_item} for {sell_price}!!!!")
+                coins += sell_price
+                my_market[new_market_item] -= sell_count
+            else:
+                pass
     else:
         market_item_price = int(input("How much coins would you like to sell it for? (You can set it to virtually any price!) "))
         item_count = int(input("How many would you like to sell? (Note: You may only sell up to the amount in your inventory!) "))
@@ -235,14 +272,17 @@ def sell(world):
         else:
             print("Exiting sale")
 
-def reset_stats(first, second):
+def reset_stats(first, second, world):
     global coins, XP, days, level, inventory, my_market
     coins = second
     XP = first
     days = first
     level = first
     inventory.clear()
-    inventory.update({"Taro seeds": 1})
+    if world == "Sotori":
+        inventory.update({"Taro seeds": 1})
+    elif world == "Nunjin":
+        inventory.update({"Persimmon seeds": 1})
     my_market.clear()
 
 
@@ -284,7 +324,7 @@ def level_up(current_XP):
         print("Wow you have done so well! Here is 100 coins for 100 XP!")
         coins +=100
 if current_game_world == "Nunjin":
-    reset_stats(0,50)
+    reset_stats(0,50, "Nunjin")
     print(f"Welcome to Nunjin! Nunjin is a 'fictional' coastal city that survives upon the sea! and {user_name} has just moved in!")
     print("The commands you have avalible to you in Nunjin are the following: \n Fish \n Farm \n Buy \n Inv/Inventory \n Sell \n Help")
     print()
@@ -323,7 +363,7 @@ if current_game_world == "Nunjin":
             print("We cannot survive on this income.. We must go home..You lose")
             game_run = False
 elif current_game_world == "Sotori":
-    reset_stats(0, 50)
+    reset_stats(0, 50, "Sotori")
     print(f"Welcome to Sotori! Sotori is a fictional mountainous city modeled after Japan and it's terrance farming!")
     print("The commands you have avalible to you in Sotori are the following: \n Restaurant \n Farm \n Buy \n See Inventory or See Inv \n Sell \n Help")
     print()
