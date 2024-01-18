@@ -1,7 +1,7 @@
 import random
 from time import sleep
 print("Welcome to Home Away From Home! A Text-Based RPG game teaching students about agricultural practices from around the world!")
-print("There are four worlds you can choose from, each with its own gameplay \nNunjin \nSotori \n")
+print("There are two worlds you can choose from, each with its own gameplay \nNunjin \nSotori \n")
 
 game_worlds = ["Nunjin", "Landry", "Sotori", "Nyongo"]
 current_game_world = ""
