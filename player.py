@@ -15,6 +15,7 @@ class Player(pygame.sprite.Sprite):
         # general setup
         self.image = self.animations[self.status][self.frame_index]
         self.rect = self.image.get_rect(center = position)
+        self.z = LAYERS['main']
 
         #managing tools
         self.tools = ['hoe', 'axe', 'water']
@@ -120,7 +121,7 @@ class Player(pygame.sprite.Sprite):
                     self.seed_index = self.seed_index
                 else:
                     self.seed_index = 0
-                self.selected_seed = self.seed[self.seed_index]
+                self.selected_seed = self.seeds[self.seed_index]
 
 
 
