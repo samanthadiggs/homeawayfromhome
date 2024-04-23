@@ -245,7 +245,7 @@ def sell(world):
     global inventory, my_market, coins, market_item, item_count, nunjin_creatures
     print(f"Entering {world}'s Busiest Farmer's Market. Here you can find the best of the best items! Do you have what it takes to sell? Let's find out!")
     print(f"This is your market: {my_market}\n")
-    print("To add items to your market, you must move it from your inventory first!")
+    print("To add items to your market, you must move it from your inventory first!\n")
     print(f"Here is your inventory:\n {inventory}")
     new_market_item = input("What would you like to add to your market? (if nothing, type none!). To exit the market, please type 'exit' ").capitalize()
     if new_market_item == "None":
@@ -277,7 +277,7 @@ def sell(world):
     elif new_market_item == "Exit":
         pass
     elif new_market_item in nunjin_creatures:
-        print(f"When selling items you fish, there is a pre-determined value for the item!")
+        print(f"When selling items you fish, there is a pre-determined value for the item!\n")
         market_item_price = nunjin_sea[market_item_price]
         print(f"{new_market_item} is worth {market_item_price}")
     else:
@@ -285,7 +285,7 @@ def sell(world):
         item_count = int(input("How many would you like to sell? (Note: You may only sell up to the amount in your inventory!) "))
         print("Setting up market now!")
         if item_count > inventory[new_market_item] or item_count != inventory[new_market_item]:
-            item_count = int(input(f"Sorry, but you do not have {item_count} amount of {market_item} to sell. As a reminder you onle have {inventory[market_item]}. Please enter another quantity: "))
+            item_count = int(input(f"Sorry, but you do not have {item_count} amount of {market_item} to sell. \n As a reminder, you only have {inventory[market_item]}. Please enter another quantity: "))
             inventory[market_item] -= item_count
             my_market[market_item] = item_count
         else:
@@ -346,7 +346,7 @@ def get_market(dict):
         print(f"Item: {key}\tPrice: {value} Coins \n")
 def level_up(current_XP):
     global level, coins
-    levels = [0, 10, 20, 30, 45, 50]
+    levels = [0, 10, 20, 30, 45, 50] #5 levels
     level_reward = False
     for level_XP in levels:
         if current_XP >= level_XP:
@@ -402,6 +402,5 @@ if current_game_world == "Nunjin":
             game_run = False
         else:
             print(f"Hmmm. That command is not found. There might be a typo. Please enter the command again.")
-
 else:
     print("These worlds have not been made yet!\nFor the sake of this project, I have sticked to only one world, but I hope I can turn this into an actual game probably using pycharm, and finish the rest of the worlds!")
