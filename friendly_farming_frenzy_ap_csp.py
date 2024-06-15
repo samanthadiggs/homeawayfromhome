@@ -1,8 +1,8 @@
 import random
 from time import sleep
-print("Welcome to Home Away From Home! A Text-Based RPG game involving farming!\n Throughout the game, you will farm, sell items, and purchase items.")
+print("Welcome to Home Away From Home! A Text-Based RPG game involving farming!\nThroughout the game, you will farm, sell items, and purchase items.")
 print("You have will have an inventory which will contain your seeds, planted items, and special items. You also have a market in which you put items that you wish to sell.")
-print("These are the worlds you can choose from: \nNunjin \n\nSotori \n")
+print("These are the worlds you can choose from: \n\nNunjin \n\nSotori \n")
 
 
 game_worlds = ["Nunjin", "Sotori"]
@@ -31,7 +31,6 @@ inventory = {
 my_market = {}
 
 seed_to_plant = {
-    # nunjin plants
     "Garlic seeds" : "Garlic cloves",
     "Onion seeds": "Onion bulbs",
     "Strawberry seeds": "Strawberries",
@@ -40,14 +39,12 @@ seed_to_plant = {
     "Tangerine seeds": "Tangerines",
     "Rice seeds" : "1 LB of Rice",
     "Persimmon seeds" : "Persimmons",
-    # sotori plants
     "Sugar beet seeds": "Sugar Beets",
     "Daikon seeds": "Daikons",
     "Cabbage seeds": "Cabbage",
     "Taro seeds": "Taro roots",
     "Cherry seeds": "Cherries",
     "Pumpkin seeds": "Pumpkins",
-    #maps the seeds to the plant
 }
 coins = 50
 XP = 0
@@ -73,7 +70,7 @@ sotori_market = {
     "Taro seeds": 3,
     "Sugar beet seeds": 5,
     "Pumpkin seeds": 2,
-    "cabbage seeds": 7,
+    "Cabbage seeds": 7,
     "Super growth ginseng": 45,
 }
 
@@ -85,7 +82,7 @@ def farming():
     farm_enter = input("Would you like to enter your farm? (Y/N) ").capitalize()
     if farm_enter == "Y":
         while farm_enter == "Y":
-            planted_seed = input("What would you like to plant? please type 'Exit' to exit the farm. To see your inventory, please type 'Show. ").capitalize()
+            planted_seed = input("What would you like to plant? please type 'Exit' to exit the farm. To see your inventory, please type 'Show': ").capitalize()
             if planted_seed == "Exit":
                 farm_enter = "N"
             elif planted_seed == "Show":
@@ -103,7 +100,7 @@ def farming():
                     plant_count = int(input(f"How many of your {planted_seed} would you like to plant? "))
                     print(f"Searching in the storage for the {plant_count} seeds....\n\n")
                     if plant_count > inventory[planted_seed]:
-                        print(f"Hmm. Looks like you only have {inventory[planted_seed]} amound of {planted_seed} in your inventory. Please enter a number that is equal to OR less than that")
+                        print(f"Hmm. Looks like you only have {inventory[planted_seed]} amount of {planted_seed} in your inventory. Please enter a number that is equal to OR less than that")
                     else:
                         plant_count_accurate = True
                 sleep(1)
@@ -182,17 +179,17 @@ def buy(world_market):
                         break
                 return amount
             total_amount = checking_stock(purchase, item_quantity, world_market)
-            def reciept(price, purchase, quantity):
-                print(f"Here is your reciept {user_name}!")
+            def receipt(price, purchase, quantity):
+                print(f"Here is your receipt {user_name}!")
                 print(f"You are purchasing {quantity} {purchase} for {price} coins!")
             if coins >= total_amount and market_enter == "Y":
                 print("Checking your balance....")
                 print()
                 sleep(0.75)
-                print("Iniating money transfer... \n")
+                print("Initiating money transfer... \n")
                 print("Money Transfer Success! \n")
                 coins = coins - total_amount
-                reciept(total_amount, purchase, item_quantity)
+                receipt(total_amount, purchase, item_quantity)
                 print(f"Your balance is now {coins}")
                 if len(inventory) > 0:
                     for item in inventory:
@@ -215,25 +212,26 @@ def sell(world):
     print("To add items to your market, you must move it from your inventory first!\n")
     print(f"Here is your inventory:\n {inventory}")
     new_market_item = input("What would you like to add to your market? \n If nothing, type 'Non' \n To exit the market, please type 'exit' \n To only add items to the market, and not sell type 'add'. \n Enter here: ").capitalize()
-    def stock_checking(item_count, item_type):
+    def stock_checking(original_count, item_type):
         global inventory, my_market, market_item, new_market_item
-        if item_count > inventory[item_type] or item_count != inventory[item_type]:
-            item_count = int(input(f"Sorry, but you do not have {item_count} amount of {item_type} to sell. As a reminder you onle have {inventory[item_type]}. Please enter another quantity: "))
-            inventory[item_type] -= item_count
-            my_market[item_type] = item_count
+        if original_count > inventory[item_type] or original_count != inventory[item_type]:
+            new_item_count = int(input(f"Sorry, but you do not have {original_count} amount of {item_type} to sell. As a reminder, you only have {inventory[item_type]}. Please enter another quantity: "))
+            inventory[item_type] -= new_item_count
+            my_market[item_type] = new_item_count
+            return new_item_count
         else:
-            inventory[item_type] -= item_count
-            my_market[item_type] = item_count
-        return item_count
+            inventory[item_type] -= original_count
+            my_market[item_type] = original_count
+            return original_count
 
     if new_market_item == "Non":
         market_item = input("Please enter an item from your market that you would like to try selling!").capitalize()
         item_count = int(input("How many would you like to sell? (Note: You may only sell up to the amount in your inventory!) "))
         print("Setting up market now!")
-        stock_checking(item_count, market_item)
+        adjusted_item_count = stock_checking(item_count, market_item)
         sleep(2)
         print("Your market is now ready to sell!")
-        print(f"You are selling {item_count} {market_item} for {market_item_price} coins!")
+        print(f"You are selling {adjusted_item_count} {market_item} for {market_item_price} coins!")
         sell_confirm = input("Confirm your listing (Y/N)! ")
         if sell_confirm == "Y" or sell_confirm == "y":
             if random.randint(0, 50) > 25:
@@ -300,20 +298,23 @@ def clean_inventory_market():
             continue
     for keys in empty_keys:
         del my_market[keys]
+
 def get_inv(dict):
     global user_name, inventory
     print(f"{user_name}'s inventory")
     print("Item: \tQuantity")
     for key,value in dict.items():
         print(f"Item: {key}\tQuantity: {value} \n")
+
 def get_market(dict):
     global nunjin_market, sotori_market
     print("Item: Price")
     for key, value in dict.items():
         print(f"Item: {key}\tPrice: {value} Coins \n")
+
 def level_up(current_XP):
     global level, coins
-    levels = [0, 10, 20, 30, 45, 50] #5 levels
+    levels = [0, 10, 20, 30, 45, 50] #levels 0-5. 
     level_reward = False
     for level_XP in levels:
         if current_XP >= level_XP:
@@ -325,10 +326,11 @@ def level_up(current_XP):
         print("Wow you have done so well! Here is 30 coins for 30 XP!")
         coins +=30
         level_reward = True
+
 def main_game(world, market):
      global coins, XP, days, level, inventory, my_market, game_run
      while game_run == True:
-        sleep(1.75)
+        sleep(1.25)
         print("\n \n")
         print(f"Coins {coins}                 | XP {XP}                 | Day {days}                 | Level {level}                 | ")
         user_command = input("Please enter a command to get started: ").capitalize()
@@ -352,8 +354,8 @@ def main_game(world, market):
         elif user_command == "Sell":
             sell(world)
         elif user_command == "Help":
-            print(f"The commands you have avalible to you in {world} are the following: \n Farm \n Buy \n Inv/Inventory \n Sell \n Help")
-        elif coins < 0:
+            print(f"The commands you have available to you in {world} are the following: \n Farm \n Buy \n Inv/Inventory \n Sell \n Help")
+        elif coins <= 0:
             print("Uh oh....Funds just too low...")
             print("We cannot survive on this income.. We must go home..You lose")
             game_run = False
@@ -365,7 +367,7 @@ def main_game(world, market):
 
 if current_game_world == "Nunjin":
     print(f"Welcome to Nunjin! Nunjin is a fictional coastal city that survives upon the sea! {user_name} has just moved in!")
-    print("The commands you have avalible to you in Nunjin are the following: \n Farm \n Buy \n Inv/Inventory \n Sell \n Help")
+    print("The commands you have available to you in Nunjin are the following: \n Farm \n Buy \n Inv/Inventory \n Sell \n Help")
     print()
     sleep(0.5)
     print(f"You are starting off with {coins} coins, {XP} XP at the {days} days mark! As you buy and sell the items you harvest, you gain XP which helps you to level up!")
@@ -373,11 +375,11 @@ if current_game_world == "Nunjin":
     main_game("Nunjin", nunjin_market)
 if current_game_world == "Sotori": 
     print(f"Welcome to Sotori! Sotori is a fictional farm town that survives upon the terrance farming and large fields! {user_name} has just moved in!")
-    print("The commands you have avalible to you in Sotori are the following: \n Farm \n Buy \n Inv/Inventory \n Sell \n Help")
+    print("The commands you have available to you in Sotori are the following: \n Farm \n Buy \n Inv/Inventory \n Sell \n Help")
     print()
     sleep(0.5)
     print(f"You are starting off with {coins} coins, {XP} XP at the {days} days mark! As you buy and sell the items you harvest, you gain XP which helps you to level up!")
     game_run = True
     main_game("Sotori", sotori_market)
 else:
-    print("These worlds have not been made yet!\nFor the sake of this project, I have sticked to only one world, but I hope I can turn this into an actual game probably using pycharm, and finish the rest of the worlds!")
+    print("Hm. There has been a sudden error in the world selection process. Please start over.")
