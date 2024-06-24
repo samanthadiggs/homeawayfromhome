@@ -4,7 +4,7 @@ from support import import_folder
 from timer import Timer
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, position, group):
+    def __init__(self, position, group, collision_sprites, tree_sprites):
         super().__init__(group)
 
         #managing assets
@@ -32,6 +32,13 @@ class Player(pygame.sprite.Sprite):
         self.position = pygame.math.Vector2(self.rect.center)
         self.speed = 200
 
+        #collision attributes
+        self.collision_sprites = collision_sprites
+        self.hitbox = self.rect.copy().inflate((-126,-70))
+
+        #interacrtions
+        self.tree_sprites = tree_sprites
+        
         #timers
         self.timers = {
             'tool use':Timer(350, self.use_tool),
@@ -41,11 +48,24 @@ class Player(pygame.sprite.Sprite):
         }
 
     def use_tool(self):
-        pass
-        #print(self.selected_tool)
+        print("tool use")
+        if self.selected_tool == "hoe":
+            pass
+        if self.selected_tool == "axe":
+            for tree in self.tree_sprites.sprites():
+                if tree.rect.collidepoint(self.target_position):
+                    tree.damage()
+        if self.selected_tool == "water":
+            pass
+        if self.selected_tool == "water":
+            pass
+    
+    def get_target_position(self):
+        self.target_position = self.rect.center + PLAYER_TOOL_OFFSET[self.status.split('_')[0]]
     
     def use_seed(self):
         pass
+    
     def import_assets(self):
         self.animations = {'up': [], 'down': [], 'right':[], 'left':[],
                            'up_idle': [], 'down_idle': [], 'right_idle':[], 'left_idle':[],
@@ -71,22 +91,22 @@ class Player(pygame.sprite.Sprite):
             if keys[pygame.K_UP]:
                 self.direction.y = -1
                 self.status = "up"
-                print('up')
+                #print('up')
             elif keys[pygame.K_DOWN]:
                 self.direction.y = 1
                 self.status = "down"
-                print('down')
+                #print('down')
             else:
                 self.direction.y = 0
             
             if keys[pygame.K_RIGHT]:
                 self.direction.x = 1
                 self.status = "right"
-                print('right')
+                #print('right')
             elif keys[pygame.K_LEFT]:
                 self.direction.x = -1
                 self.status = "left"
-                print('left')
+                #print('left')
             else:
                 self.direction.x = 0
             
@@ -132,12 +152,33 @@ class Player(pygame.sprite.Sprite):
             self.status = self.status.split('_')[0] + "_idle"
         
         if self.timers['tool use'].active:
-            print('tool is being used')
+            #print('tool is being used')
             self.status = self.status.split("_")[0] + "_" + self.selected_tool
     
     def update_timers(self):
         for timer in self.timers.values():
             timer.update()
+
+    def collision(self, direction):
+        for sprite in self.collision_sprites.sprites():
+            if hasattr(sprite, "hitbox"):
+                if sprite.hitbox.colliderect(self.hitbox):
+                    if direction == "horizontal":
+                        if self.direction.x > 0: #moving right
+                            self.hitbox.right = sprite.hitbox.left
+                        if self.direction.x < 0: #moving left
+                            self.hitbox.right = sprite.hitbox.right
+                        self.rect.centerx = self.hitbox.centerx
+                        self.position.x = self.hitbox.centerx
+
+                    if direction == "vertical":
+                        if self.direction.y > 0: #moving down
+                            self.hitbox.bottom = sprite.hitbox.top
+                        if self.direction.y < 0: #moving up
+                            self.hitbox.top = sprite.hitbox.bottom
+                        self.rect.centery = self.hitbox.centery
+                        self.position.y = self.hitbox.centery
+
 
     def move(self, dt):
         #normalize the vector
@@ -146,16 +187,20 @@ class Player(pygame.sprite.Sprite):
         
         #horizontal movement
         self.position.x += self.direction.x * self.speed * dt
-        self.rect.centerx = self.position.x
+        self.hitbox.centerx = round(self.position.x)
+        self.rect.centerx = self.hitbox.centerx
+        self.collision("horizontal")
 
         #vertical movement
         self.position.y += self.direction.y * self.speed * dt
-        self.rect.centery = self.position.y
+        self.hitbox.centery = round(self.position.y)
+        self.rect.centery = self.hitbox.centery
+        self.collision("vertical")
 
     def update(self, dt):
         self.input()
         self.get_status()
         self.update_timers()
-
+        self.get_target_position()
         self.move(dt)
         self.animate(dt)
