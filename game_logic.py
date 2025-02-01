@@ -2,30 +2,25 @@ import random
 from time import sleep
 print("Welcome to Home Away From Home! A Text-Based RPG game teaching students about agricultural practices from around the world!")
 print("There are two worlds you can choose from, each with its own gameplay \nNunjin \nSotori \n")
-print("To test code please type Test Nunjin or Test Sotori")
 
-game_worlds = ["Nunjin", "Sotori", ]
+game_worlds = ["Nunjin", "Sotori"]
 current_game_world = ""
 def choose_world(user_world):
     global game_worlds
     global current_game_world
-    if user_world == "Test nunjin":
-        current_game_world = "Nunjin"
-    elif user_world == "Test sotori":
-        current_game_world = "Sotori"
-    else: 
-        for world in game_worlds:
-            if user_world == world:
-                current_game_world = user_world
+    for world in game_worlds:
+        if user_world == world:
+            current_game_world = user_world
+        elif user_world not in game_worlds:
+            print("Hmmm. This world cannot be found. Be careful to spell all things correctly! Selecting the Default World:")
+            current_game_world =  "Nunjin"
+            break
     return current_game_world
 
-user_world = input("Please select your world (Nunjin, Sotori). Please put capital letters: ").capitalize()
-if user_world != "Test nunjin" or user_world != "Test sotori":
-    choose_world(user_world)
-    print(f"\nNice! Let's get started in {current_game_world}")
-    user_name = input("Please type in your name: ").capitalize()
-else:
-    choose_world(user_world)
+user_world = input("Please select your world. Please use capital letters: ").capitalize()
+choose_world(user_world)
+print(f"\nNice! Let's get started in {current_game_world}")
+user_name = input("Please type in your name: ").capitalize()
 
 inventory = {
     "Garlic seeds" : 1 # the key is the item and the value is the quantity!
@@ -80,8 +75,8 @@ nunjin_market = {
     "Strawberry seeds": 12,
     "Garlic seeds": 15,
     "Onion seeds": 10,
-    "Super Growth Ginseng": 45,
-    "Special Fish Bait": 75,
+    "Super growth ginseng": 45,
+    "Special fish bait": 75,
 }
 
 sotori_market = {
@@ -109,9 +104,11 @@ recipes = {
     "Risotto": [["Rice", 2]],
 }
 
+nunjin_creatures = list(nunjin_sea.keys())
+
 unlocked_recipes = ["Takoyaki"]
 def fishing():
-    global coins, XP, days, level, nunjin_sea, inventory
+    global coins, XP, days, level, nunjin_sea, inventory, nunjin_creatures
     print(f"Coins {coins}                 | XP {XP}                 | Day {days}                 | Level {level}                 | ")
     print()
     print("To the Coastal City of Nunjin, Fishing & Diving is a very important part of the culture. Simarlry, Diving has a huge history in the province of Jeju Island in South Korea (of which Nunjin is inspired by!)")
@@ -221,9 +218,9 @@ def buy(world_market):
     get_market(world_market)
     while market_enter == "Y":
         purchase = input("What would you like to buy? (Type 'exit' to leave market or 'show' to see market) ").capitalize()
-        if purchase == "exit" or purchase == "Exit":
+        if purchase == "Exit":
             market_enter = "N"
-        elif purchase == "show" or purchase == "Show":
+        elif purchase == "Show":
             print("Loading market")
             get_market(world_market)
         else:
