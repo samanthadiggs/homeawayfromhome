@@ -286,11 +286,11 @@ def sell(world):
         print("Setting up market now!")
         if item_count > inventory[new_market_item] or item_count != inventory[new_market_item]:
             item_count = int(input(f"Sorry, but you do not have {item_count} amount of {market_item} to sell. \n As a reminder, you only have {inventory[market_item]}. Please enter another quantity: "))
-            inventory[market_item] -= item_count
-            my_market[market_item] = item_count
+            inventory[new_market_item] -= item_count
+            my_market[new_market_item] = item_count
         else:
-            inventory[market_item] -= item_count
-            my_market[market_item] = item_count
+            inventory[new_market_item] -= item_count
+            my_market[new_market_item] = item_count
         sleep(2)
         print("Your market is now ready to sell!")
         print(f"You are selling {item_count} {new_market_item} for {market_item_price} coins!")

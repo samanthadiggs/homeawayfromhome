@@ -42,7 +42,9 @@ class Game:
                 self.player.fishing.cast_line(self.player)
             elif choice == "2":
                 seed = input("What would you like to plant? please type 'Exit' to exit the farm. To see your inventory, please type 'Show': ").capitalize()
-                self.player.farming.plant_crop(seed)
+                crop_amount = int(input("How many would you like to plant? "))
+
+                self.player.farming.plant_crop(seed, self.player, crop_amount)
             elif choice == "3":
                 print("\nWelcome to the market! Your one-stop shop to buy anything!")
                 print("Here you can buy any tools you need as well as special upgrades.")
@@ -197,11 +199,85 @@ class Farming:
     def __init__(self, world):
         self.world = world
         self.farm = {}  # Stores player's planted crops
+        self.seed_to_plant = {
+            "Garlic seeds" : "Garlic cloves",
+            "Onion seeds": "Onion bulbs",
+            "Strawberry seeds": "Strawberries",
+            "Pear seeds": "Pears",
+            "Carrot seeds": "Carrots",
+            "Tangerine seeds": "Tangerines",
+            "Rice seeds" : "1 LB of Rice",
+            "Persimmon seeds" : "Persimmons",
+            "Sugar beet seeds": "Sugar Beets",
+            "Daikon seeds": "Daikons",
+            "Cabbage seeds": "Cabbage",
+            "Taro seeds": "Taro roots",
+            "Cherry seeds": "Cherries",
+            "Pumpkin seeds": "Pumpkins",
+            #maps the seeds to the plant
+        }
 
-    def plant_crop(self, crop):
+    def farm_maintenance(crop, crop_count, player):
+        for x in player.inventory:
+            if crop not in player.inventory:
+                print(f"{crop} cannot be found!")
+                break
+            elif crop in player.inventory:
+                plant_count_accurate = False
+                while plant_count_accurate == False:
+                    print(f"Searching in the storage for the {crop_count} seeds....\n\n")
+                    if plant_count > player.inventory[crop]:
+                        print(f"Hmm. Looks like you only have {player.inventory[crop]} amound of {crop} in your inventory. Please enter a number that is equal to OR less than that")
+                    else:
+                        plant_count_accurate = True
+
+    def plant_crop(self, crop, player, crop_amount):
         if crop in self.world.market:
-            self.farm[crop] = "Growing"
-            print(f"🌱 You planted {crop}. It will be ready soon!")
+            for item in player.inventory:
+                    if item != planted_seed: 
+                        continue
+                    elif item == planted_seed:
+                        break
+                    else:
+                        print(f"Hmmm. Looks like {planted_seed} cannot be found in your inventory. Exiting the farm now")
+                plant_count_accurate = False
+                while plant_count_accurate == False:
+                    plant_count = int(input(f"How many of your {planted_seed} would you like to plant? "))
+                    print(f"Searching in the storage for the {plant_count} seeds....\n\n")
+                    if plant_count > inventory[planted_seed]:
+                        print(f"Hmm. Looks like you only have {inventory[planted_seed]} amount of {planted_seed} in your inventory. Please enter a number that is equal to OR less than that")
+                    else:
+                        plant_count_accurate = True
+                sleep(1)
+                plant_time = random.randint(1, 10)
+                print(f"Found it! The expected plant time is {plant_time} days! You know how it is here..very unpredictable! Please wait patiently!")
+                sleep(plant_time)
+                days += plant_time
+                if "Super growth ginseng" in player.inventory:
+                    print("Oh wait.. Super Growth Ginseng has been found in your inventory. This will increase your chances of growing the seed perfectly to 75%! \n Please note that once the super growth ginseng has been used, it will be removed from your inventory! You must purchase it again to experience the benefits!")
+                    if random.randint(0,50) < 38: #about 75% chance
+                        print(f"Hooray! The {planted_seed} have grown perfectly!")
+                        plant = seed_to_plant[planted_seed]
+                        player.inventory[plant] = plant_count
+                        player.inventory.pop(planted_seed)
+                        print(f"{plant_count} {plant} was added to your inventory. Time to sell and make some money!! \n")
+                    else:
+                        print("Oh no...the plant did not survive.")
+                        player.inventory[planted_seed] -= plant_count
+                        print("Better luck next time!\n")
+                        player.inventory.pop("Super growth ginseng")
+                elif "Super growth ginseng" not in player.inventory:
+                    if random.randint(0,50) > 25:
+                        print(f"Hooray! The {planted_seed} have grown perfectly!")
+                        plant = seed_to_plant[planted_seed]
+                        player.inventory[plant] = plant_count
+                        player.inventory.pop(planted_seed)
+                        print(f"{plant_count} {plant} was added to your inventory. Time to sell and make some money!! \n")
+                    else:
+                        print("Oh no...the plant did not survive.")
+                        player.inventory[planted_seed] -= plant_count
+                        print("Better luck next time!\n")
+                        break
         else:
             print(f"🚫 {crop} is not available in this world.")
 
