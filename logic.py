@@ -201,6 +201,13 @@ class World:
                 "Cutlassfish": 35, 
                 "Shrimp": 1
             }
+            self.recipes = {
+                "Haemul Pajeon": [["Flour", 2], ["Egg", 1], ["Scallions", 2], ["Octopus", 2]],
+                "Jeonbukjouk": [["Rice", 3], ["Abalone", 2], ["Garlic", 1]],
+                "Hanchi Jjigae": [["Cuttlefish", 2], ["Tofu", 1], ["Chili Paste", 1], ["Onion", 1]],
+                "Goguma Mattang": [["Sweet Potato", 3], ["Sugar", 1], ["Sesame Seeds", 1]],
+                "Maeuntang": [["Rockfish", 2], ["Chili Paste", 1], ["Garlic", 1], ["Tofu", 1]],
+            }
         elif name == "Sotori":
             self.market = {
                 "Fishing rod": 9,
@@ -216,16 +223,21 @@ class World:
                 "Super growth ginseng": 45,
             }
             self.sea_creatures = {
-                "Octopus": 13,
-                "Shrimp": 2,
-                "Eel": 5,
+                "Ayu (sweetfish)": 5,
+                "Yamame trout": 4, 
+                "Freshwater eel": 7,
+                "Giant loach": 8,
             }
 
             self.recipes = {
                 "Takoyaki": [["Octopus", 3], ["Flour", 2]],
-                "Risotto": [["Rice", 2]],}
+                "Risotto": [["Rice", 2]],
+                "Sansai Udon": [["Udon Noodles", 2], ["Mushrooms", 2], ["Spinach", 2]],
+                "Hobamiso": [["Miso", 2], ["Green Onion", 1], ["Tofu", 1]],
+                }
             
             self.menu_prices = {}
+        elif name == ""
         else:
             self.market = {}  # Default empty market
             self.sea_creatures = {}
