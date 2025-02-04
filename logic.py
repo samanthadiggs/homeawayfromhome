@@ -4,13 +4,13 @@ from time import sleep
 class Game:
     # This will manage the game state, such as the world selection, player details, inventory, and main game loop.
     def __init__(self):
-        self.game_worlds = ["Nunjin", "Sotori"]
+        self.game_worlds = ["Nunjin", "Sotori", "Marave", "Almeda", "Kalayaan", "Kashihara", "Ekero"]
         self.current_game_world = None
         self.player = None
 
     def start_game(self):
         print("Welcome to Home Away From Home! A Text-Based RPG game teaching students about agricultural practices from around the world!")
-        print("There are two worlds you can choose from, each with its own gameplay: Nunjin & Sotori")
+        print("There are multiple worlds to choose from: Nunjin ")
 
         user_world = input("Please select your world. Please use capital letters: ").capitalize()
         self.current_game_world = self.choose_world(user_world)
@@ -38,12 +38,17 @@ class Game:
             print("5. Settings 🛒")
             print("6. Quit 🚪")
 
+            random_XP = random.randrange(0,11,5)
+            self.player.xp += random_XP
+            self.player.level_up()
+            self.player.clean_inv_market()
+
             choice = input("Select an option: ")
             if choice == "1":
                 self.player.fishing.cast_line(self.player)
             elif choice == "2":
                 seed = input("What would you like to plant? please type 'Exit' to exit the farm. To see your inventory, please type 'Show': ").capitalize()
-                crop_amount = int(input("How many would you like to plant? "))
+                crop_amount = int(input("How many would you like to plant? (to see inventory, please type 0) "))
                 maintenance = self.player.farming.farm_maintenance(seed, crop_amount, self.player)
                 print(maintenance)
                 if maintenance == True:
@@ -88,7 +93,7 @@ class Game:
                     self.player.get_market()
                 elif choice == "5":
                     print("Recipes")
-                    for recipe, ingredients in self.player.restaurant.recipes.items():
+                    for recipe, ingredients in self.world.recipes.items():
                         print(f"{recipe}: {ingredients}")
             elif choice == "6":
                 print("Thanks for playing! See you next time!")
@@ -186,9 +191,13 @@ class World:
                 "Strawberry seeds": 12,
                 "Garlic seeds": 15,
                 "Onion seeds": 10,
+                "Sweet potato seeds":11,
                 "Super growth ginseng": 45,
                 "Special fish bait": 75,
             }
+
+            self.trade_market = ["Flour", "Tofu", "Chili paste", "Sesame seeds"]
+
             self.sea_creatures = {
                 "Turban shells": 20, # Each Key is the sea creature and the value is how much it is worth!
                 "Sea cucumbers": 40, 
@@ -205,8 +214,8 @@ class World:
                 "Haemul Pajeon": [["Flour", 2], ["Egg", 1], ["Scallions", 2], ["Octopus", 2]],
                 "Jeonbukjouk": [["Rice", 3], ["Abalone", 2], ["Garlic", 1]],
                 "Hanchi Jjigae": [["Cuttlefish", 2], ["Tofu", 1], ["Chili Paste", 1], ["Onion", 1]],
-                "Goguma Mattang": [["Sweet Potato", 3], ["Sugar", 1], ["Sesame Seeds", 1]],
-                "Maeuntang": [["Rockfish", 2], ["Chili Paste", 1], ["Garlic", 1], ["Tofu", 1]],
+                "Goguma Mattang": [["Sweet potato", 3], ["Sugar", 1], ["Sesame seeds", 1]],
+                "Maeuntang": [["Rockfish", 2], ["Chili paste", 1], ["Garlic", 1], ["Tofu", 1]],
             }
         elif name == "Sotori":
             self.market = {
@@ -222,6 +231,9 @@ class World:
                 "Promotional flyer" : 75,
                 "Super growth ginseng": 45,
             }
+
+            self.trade_market = ["Udon noodles", "Miso", "Tofu", "Spinach"]
+            
             self.sea_creatures = {
                 "Ayu (sweetfish)": 5,
                 "Yamame trout": 4, 
@@ -237,7 +249,36 @@ class World:
                 }
             
             self.menu_prices = {}
-        elif name == ""
+        elif name == "Marave":
+            self.market = {
+
+            }
+            self.sea_creatures = {}
+            self.recipes = {}
+        elif name == "Almeda":
+            self.market = {
+
+            }
+            self.sea_creatures = {}
+            self.recipes = {}
+        elif name == "Kalayaan":
+            self.market = {
+
+            }
+            self.sea_creatures = {}
+            self.recipes = {}
+        elif name == "Kashihara":
+            self.market = {
+
+            }
+            self.sea_creatures = {}
+            self.recipes = {}
+        elif name == "Ekero":
+            self.market = {
+
+            }
+            self.sea_creatures = {}
+            self.recipes = {}
         else:
             self.market = {}  # Default empty market
             self.sea_creatures = {}
@@ -265,7 +306,8 @@ class Market:
 
         self.acceptable_range_multiplier = (0.8, 1.2)  # Starts with ±20% range
 
-    
+    def trade(self):
+        pass
 
     def check_sale_chance(self, item, listed_price):
         """Determines if an item sells based on pricing, with a small chance of negotiation."""
@@ -296,7 +338,6 @@ class Market:
         min_offer = int(0.85 * listed_price)
         max_offer = int(0.95 * listed_price)
         return random.randint(min_offer, max_offer)
-
 
     def buy(self, item, item_quantity, player):
         total_price = self.world.market[item] * item_quantity
@@ -336,7 +377,7 @@ class Market:
                     if count > player.inventory[item]:
                         print("Not enough in inventory!")
                         continue
-                    price = int(input("Set your selling price per item: "))
+                    price = int(input(f"Set your selling price per item (the base price for this item is {self.base_prices.get(item, None)}): "))
                     player.inventory[item] -= count
                     if item in player.my_market:
                         player.my_market[item]['count'] += count
@@ -378,7 +419,7 @@ class Market:
                     else:
                         print(f"❌ No buyers for {item} today.")
 
-                player.days += 1
+                #player.days += 1
                 print(f"You now have {player.coins} coins.")
                 break
             
@@ -429,7 +470,10 @@ class Farming:
         }
 
     def farm_maintenance(self, crop, crop_count, player):
-        if crop not in player.inventory.keys():
+        if crop == "Show":
+            player.get_inv()
+            return False
+        elif crop not in player.inventory.keys():
             print(f"{crop} cannot be found!")
             return False
         elif crop in player.inventory:
@@ -446,7 +490,8 @@ class Farming:
                 plant_time = random.randint(1, 8)
                 print(f"Found it! The expected plant time is {plant_time} days! You know how it is here..very unpredictable! Please wait patiently!")
                 sleep(plant_time)
-                player.days += plant_time
+                #print(player.days)
+                #player.days += plant_time
                 if "Super growth ginseng" in player.inventory:
                     print("Oh wait.. Super Growth Ginseng has been found in your inventory. This will increase your chances of growing the seed perfectly to 75%! \n Please note that once the super growth ginseng has been used, it will be removed from your inventory! You must purchase it again to experience the benefits!")
                     if random.randint(0,50) < 38: #about 75% chance
@@ -554,8 +599,8 @@ class Upgrades:
         self.upgrade_levels = {
             "price_range_boost": {"reputation": 10},  # Expands price range
             "better_customers": {"reputation": 20},  # Unlocks high-tier customers
-            "bigger_stall": {"level": 5},  # Increases stall size
             "loan_discount": {"reputation": 40},  # Reduces loan interest
+            "unlock_livestock": {"level": 10}
         }
         self.unlocked_upgrades = set()
 
@@ -571,16 +616,17 @@ class Upgrades:
             market.acceptable_range_multiplier = (0.7, 1.3)
         if "better_customers" in self.unlocked_upgrades:
             market.high_tier_customers = True
-        if "bigger_stall" in self.unlocked_upgrades:
-            market.stall_size += 5
         if "loan_discount" in self.unlocked_upgrades:
             player.loan_interest_rate = 0.05  # Lower loan interest
-        if "bulk_selling" in self.unlocked_upgrades:
-            market.bulk_selling_enabled = True
+        if "unlock_livestock" in self.unlocked_upgrades:
+            player.livestock = Livestock()
 
+class Livestock:
+    # Manages livestock, feeding, care, and product collection
+    def __init__(self):
+        self.animals = {"Cows": 5, "Chickens": 10,}
 
 # Main Game Execution
 game = Game()
 game.start_game()
-
 game.main_menu()
